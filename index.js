@@ -1,7 +1,22 @@
-const express = require('express')
+var express = require('express')
+var { color } = require('./lib/color.js')
+
+const PORT = process.env.PORT || 80 || 5000 || 9000
 const app = express()
-app.all('/', (req, res) => {
-    console.log("Just got a request!")
-    res.send('Yo!')
+
+var apirouter = require('./routes/api')
+
+app.use('/api', apirouter)
+
+app.use(function (req, res, next) {
+    res.status(404).json({
+        status: false,
+        message: "Page not found"
+    })
 })
-app.listen(process.env.PORT || 3000)
+
+app.listen(PORT, () => {
+  console.log(color("Server running on port " + PORT,'green'))
+})
+
+module.exports = app
